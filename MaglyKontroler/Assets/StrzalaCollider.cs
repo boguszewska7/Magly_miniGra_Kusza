@@ -17,6 +17,7 @@ public class StrzalaCollider : MonoBehaviour
         if (collision.other.CompareTag("Tarcza"))
         {
             Rb.isKinematic = true;
+            
         }
     }
 }

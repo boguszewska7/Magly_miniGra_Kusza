@@ -14,6 +14,7 @@ public class DataFromPort : MonoBehaviour
     public GameObject sphereOrgin;
     Vector3 controllerRotation;
     Vector3 firstRotation;
+    float firstAccx;
     public const float angleMultiplier = 1.0f;
     private bool first_data = true;
     float prev = 0;
@@ -26,7 +27,7 @@ public class DataFromPort : MonoBehaviour
     [SerializeField] public double RotationControllerX;
     [SerializeField] public bool CreateArow = false;
     [SerializeField] public bool PushArow = false;
-    [SerializeField] public GameObject ArrowController;
+    [SerializeField] public float powerToAcc = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +39,7 @@ public class DataFromPort : MonoBehaviour
         {
 
             string data = e.Data.ToString();
+            
             if (data.Length > 8)
             {
                 string[] splitData = data.Split(',');
@@ -45,12 +47,17 @@ public class DataFromPort : MonoBehaviour
                 float Qy = float.Parse(splitData[1], CultureInfo.InvariantCulture.NumberFormat);
                 float Qz = float.Parse(splitData[2], CultureInfo.InvariantCulture.NumberFormat);
                 float Qw = float.Parse(splitData[3], CultureInfo.InvariantCulture.NumberFormat);
+                float Accx = float.Parse(splitData[4], CultureInfo.InvariantCulture.NumberFormat);
+                float Accy = float.Parse(splitData[5], CultureInfo.InvariantCulture.NumberFormat);
+                float Accz = float.Parse(splitData[6], CultureInfo.InvariantCulture.NumberFormat);
+
                 float[] quats = { Qx, Qy, Qz, Qw };
-              
+                //Debug.Log(Accx +";"+ Accy + ";"+ Accz);
                 if (first_data)
                 {
                     firstRotation = calculateRotation(quats);
-                    firstRotation.y += 90;
+                    firstAccx = Accx;
+                   // firstRotation.y += 90;
                     if (firstRotation.x != 0 && firstRotation.y != 0 && firstRotation.z != 0) first_data = false;
                 }
                 else if(recalc)
@@ -73,34 +80,39 @@ public class DataFromPort : MonoBehaviour
                         controllerRotation.y = prev;
                     }
 
+
+                    prev = controllerRotation.y;
                     //Ograniczenie po osi y
-                    controllerRotation.y = Mathf.Clamp(controllerRotation.y, -180, 0);
+                    controllerRotation.y = Mathf.Clamp(controllerRotation.y, -45, 45);
 
                     
 
-                    oneAxis = new Vector3(0, controllerRotation.y, 0);
+                    
 
                     //Ograniczenie po osi x
-                    controllerRotation.x = Mathf.Clamp(controllerRotation.x, -40, 0);
+                    controllerRotation.x = Mathf.Clamp(controllerRotation.x, -40, 1);
                     //Debug.Log(controllerRotation.x);
                     RotationControllerX = -controllerRotation.x;
-                    prev = controllerRotation.y;
-                    //Debug.Log(dt);
 
-                    Debug.Log(controllerRotation.z);
-                    //controllerRotation.x = Mathf.Clamp(controllerRotation.x, -92, 0);
-                    if (CreateArow == false && PushArow == false && controllerRotation.z<= -90)
-                    {
-                        CreateArow = true;
-                        PushArow = true;
-                    }
-                        
+
+
+                    //Åadowanie strzaÅ‚
+                    ////if (CreateArow == false && PushArow == false && controllerRotation.z<= -90)
+                    if(firstAccx- powerToAcc > Accx && CreateArow == false && PushArow == false)
+                     {
+                        Debug.Log("lol");
+                         CreateArow = true;
+                         PushArow = true;
+                     }
+                       
+                    controllerRotation.z = Mathf.Clamp(controllerRotation.z, -75, 75);
+                    oneAxis = new Vector3(controllerRotation.x, controllerRotation.y, 0);
 
                 }
             }
             else
             {
-                //kiedy kontroler jest wy³¹czony
+                //kiedy kontroler jest wyï¿½ï¿½czony
                 if (data == "cwo") recalc = true;
             }
             
