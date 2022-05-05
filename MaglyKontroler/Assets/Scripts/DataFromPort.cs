@@ -39,19 +39,29 @@ public class DataFromPort : MonoBehaviour
         {
 
             string data = e.Data.ToString();
-            
+            Debug.Log(data);
             if (data.Length > 8)
             {
                 string[] splitData = data.Split(',');
-                float Qx = float.Parse(splitData[0], CultureInfo.InvariantCulture.NumberFormat);
-                float Qy = float.Parse(splitData[1], CultureInfo.InvariantCulture.NumberFormat);
-                float Qz = float.Parse(splitData[2], CultureInfo.InvariantCulture.NumberFormat);
-                float Qw = float.Parse(splitData[3], CultureInfo.InvariantCulture.NumberFormat);
-                float Accx = float.Parse(splitData[4], CultureInfo.InvariantCulture.NumberFormat);
-                float Accy = float.Parse(splitData[5], CultureInfo.InvariantCulture.NumberFormat);
-                float Accz = float.Parse(splitData[6], CultureInfo.InvariantCulture.NumberFormat);
+                float Accx = float.Parse(splitData[0], CultureInfo.InvariantCulture.NumberFormat);
+                float Accy = float.Parse(splitData[1], CultureInfo.InvariantCulture.NumberFormat);
+                float Accz = float.Parse(splitData[2], CultureInfo.InvariantCulture.NumberFormat);
+                float Gyrx = float.Parse(splitData[3], CultureInfo.InvariantCulture.NumberFormat);
+                float Gyry = float.Parse(splitData[4], CultureInfo.InvariantCulture.NumberFormat);
+                float Gyrz = float.Parse(splitData[5], CultureInfo.InvariantCulture.NumberFormat);
+                float Magx = float.Parse(splitData[6], CultureInfo.InvariantCulture.NumberFormat);
+                float Magy = float.Parse(splitData[7], CultureInfo.InvariantCulture.NumberFormat);
+                float Magz = float.Parse(splitData[8], CultureInfo.InvariantCulture.NumberFormat);
+                float Qx = float.Parse(splitData[9], CultureInfo.InvariantCulture.NumberFormat);
+                float Qy = float.Parse(splitData[10], CultureInfo.InvariantCulture.NumberFormat);
+                float Qz = float.Parse(splitData[11], CultureInfo.InvariantCulture.NumberFormat);
+                float Qw = float.Parse(splitData[12], CultureInfo.InvariantCulture.NumberFormat);
+                
 
                 float[] quats = { Qx, Qy, Qz, Qw };
+                float[] acc = { Accz, Accy, Accz };
+                float[] mag = { Magz, Magy, Magz };
+
                 //Debug.Log(Accx +";"+ Accy + ";"+ Accz);
                 if (first_data)
                 {
@@ -115,7 +125,7 @@ public class DataFromPort : MonoBehaviour
                 //kiedy kontroler jest wy��czony
                 if (data == "cwo") recalc = true;
             }
-            
+           
         };
 
     }
